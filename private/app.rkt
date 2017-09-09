@@ -38,6 +38,5 @@
 
 (define (greeting name version)
   (cond
-    ; TODO colorize
     [(non-empty-string? version) (string-append name " v" version)]
     [else name]))
