@@ -62,7 +62,7 @@
 (define (cmd-help-format cmd width)
   ; return 2 spaces + group:name + padding spaces + description to output
   (string-append "  "
-                 (~a (cli-command-group cmd) (cli-command-name cmd) #:separator ":" #:min-width width)
+                 (~a (cli-command-group cmd) (cli-command-name cmd) #:separator ":" #:min-width (+ 2 width))
                  (cli-command-description cmd)
                  "\n"))
 

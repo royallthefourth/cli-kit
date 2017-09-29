@@ -15,15 +15,12 @@
 (define (cli-run
          name
          commands
-         [version ""]
-         [input (current-input-port)]
-         [output (current-output-port)])
-  (displayln (greeting name version) output))
+         [version ""])
+  (displayln (greeting name version))
+  (display-stream (show-help-general commands)))
 
 (define (run-command
          commands
-         input
-         output
          args)
   ; TODO check for presence of arg in list
   ; TODO if arg matches, execute command
@@ -40,6 +37,9 @@
                              (stream (for/fold ([cmd-desc ""])
                                        ([cmd (cdr group)])
                                (string-append cmd-desc (cmd-help-format cmd maxlen))))))))
+
+(define (display-stream s)
+  (for ([o (in-stream s)]) (display o)))
 
 (define (greeting name version)
   (cond
