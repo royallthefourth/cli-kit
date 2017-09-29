@@ -1,17 +1,18 @@
 #lang racket/base
 
 (require
-  racket/contract
+  racket/stream
   racket/string
   "arg.rkt"
   "command.rkt"
   "option.rkt")
-(provide cli-run!)
+(provide cli-run)
 
-; TODO write formatters for table, progressbar
+; TODO write formatters for progressbar
+; recommend using racket table lib: https://github.com/Metaxal/text-table
 ; TODO write question helper
 
-(define (cli-run!
+(define (cli-run
          name
          commands
          [version ""]
@@ -19,22 +20,26 @@
          [output (current-output-port)])
   (displayln (greeting name version) output))
 
-(define (run-commands!
+(define (run-command
          commands
          input
          output
          args)
-  ; TODO check for presence of arg
-  ; TODO if arg present, execute command
-  ; TODO if arg absent, display help
+  ; TODO check for presence of arg in list
+  ; TODO if arg matches, execute command
+  ; TODO if arg absent, display show-help-general
   ; TODO catch and output exceptions
+  'todo
   )
 
-(define (show-help-general commands output)
-  ; TODO create categories based on commands
-  ; TODO output commands by category
-  ; TODO indent output by counting spaces
-  )
+(define (show-help-general commands)
+  (let ([maxlen (longest-cmd commands)])
+    (for/fold ([output (stream "Available Commands:\n")])
+              ([group (cmd-by-group commands)])
+              (stream-append output (stream " " (car group) "\n")
+                             (stream (for/fold ([cmd-desc ""])
+                                       ([cmd (cdr group)])
+                               (string-append cmd-desc (cmd-help-format cmd maxlen))))))))
 
 (define (greeting name version)
   (cond
