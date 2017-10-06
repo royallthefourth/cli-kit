@@ -33,11 +33,6 @@
   'todo
   )
 
-(define (find-cmd commands arg)
-  (findf (λ (cmds)
-           )
-         commands))
-
 (define (show-help-general commands)
   (let ([maxlen (longest-cmd commands)])
     (for/fold ([output (stream "Available Commands:\n")])
