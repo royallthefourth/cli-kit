@@ -11,23 +11,32 @@
 ; TODO write formatters for progressbar
 ; recommend using racket table lib: https://github.com/Metaxal/text-table
 ; TODO write question helper
+; TODO write password input helper
 
 (define (cli-run
          name
          commands
          [version ""])
   (displayln (greeting name version))
-  (display-stream (show-help-general commands)))
+  (select-command commands (current-command-line-arguments)))
 
-(define (run-command
+(define (select-command
          commands
          args)
-  ; TODO check for presence of arg in list
+  (let ([cmd (cmd-in-list commands args)])
+    (cond
+      [(equal? 0 (vector-length (current-command-line-arguments))) (show-help-general commands)]
+    ))
+  ; TODO check for presence of arg in list and print error if not found
   ; TODO if arg matches, execute command
-  ; TODO if arg absent, display show-help-general
   ; TODO catch and output exceptions
   'todo
   )
+
+(define (find-cmd commands arg)
+  (findf (λ (cmds)
+           )
+         commands))
 
 (define (show-help-general commands)
   (let ([maxlen (longest-cmd commands)])

@@ -9,6 +9,7 @@
 (provide cli-command
          cmd-by-group
          cmd-help-format
+         cmd-in-list
          (contract-out
           [make-cli-command (->*
                              (#:name string?
@@ -45,6 +46,11 @@
    opts
    proc))
 
+(define (cmd-in-list name commands)
+  (findf (λ (arg)
+           (equal? name (string-append (cli-command-group arg) ":" (cli-command-name arg))))
+         commands))
+
 (define (longest-cmd commands)
   (let ([longest (argmax
             (λ (cmd)
@@ -74,4 +80,7 @@
          [grouped (cmd-by-group cmds)])
     (check-equal? 14 (longest-cmd cmds))
     (check-equal? "alpha" (car (first grouped)))
-    (check-equal? 1 (length (cdr (first grouped))))))
+    (check-equal? 1 (length (cdr (first grouped))))
+    (check-equal? #f (cmd-in-list "asdf:jkl" cmds))
+    (check-equal? (first cmds) (cmd-in-list "alpha:test" cmds))
+    (check-equal? (second cmds) (cmd-in-list "beta:test-more" cmds))))
